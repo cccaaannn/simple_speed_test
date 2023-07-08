@@ -1,3 +1,4 @@
+log_level = "Info"
 iteration = 3
 download_urls = [
     "https://github.com/cccaaannn/readme_media/blob/master/media/telegram_youtube_downloader/gifs/example_download_menu.gif?raw=true",
