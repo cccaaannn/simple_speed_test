@@ -1,3 +1,5 @@
+use std::io;
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -10,4 +12,7 @@ fn main() {
 
     // Run speed test
     speed_test::start();
+
+    println!("\nPress any key to exit\n");
+    io::stdin().read_line(&mut String::new()).unwrap();
 }
