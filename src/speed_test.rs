@@ -1,6 +1,7 @@
 use reqwest::blocking::get;
 use std::io::{stdout, Write};
 use std::time::{Duration, Instant};
+use owo_colors::OwoColorize;
 
 use crate::config_utils;
 
@@ -48,11 +49,11 @@ pub fn start() {
     for iteration in 0..app_config.iteration {
         println!("Iteration: {}", iteration + 1);
         for download_url in &app_config.download_urls {
-            print!("Downloading: {}", download_url);
+            print!("Downloading: {}", download_url.blue());
             let _ = stdout().flush();
             let per_seconds: PerSeconds = download_content(download_url.to_owned());
             total_bps += per_seconds.bps;
-            println!(" [Mbps: {:.*}]", 3, per_seconds.mbps);
+            println!(" [Mbps: {:.*}]", 3, per_seconds.mbps.green());
         }
         println!();
     }
@@ -62,7 +63,6 @@ pub fn start() {
         (app_config.download_urls.len() as i32 * app_config.iteration) as f64,
     );
 
-    println!("bps: {:.*}", 3, per_seconds.bps);
-    println!("Kbps: {:.*}", 3, per_seconds.kbps);
-    println!("Mbps: {:.*}", 3, per_seconds.mbps);
+    println!("Kbps: {:.*}", 3, per_seconds.kbps.green());
+    println!("Mbps: {:.*}", 3, per_seconds.mbps.green());
 }
