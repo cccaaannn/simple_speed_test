@@ -1,6 +1,7 @@
 use log::{error, Level};
 use serde::Deserialize;
 use std::fs;
+use std::process;
 
 #[derive(Deserialize)]
 struct AppConfigFile {
@@ -16,32 +17,33 @@ pub struct AppConfig {
     pub log_level: Level,
 }
 
-lazy_static! {
-    pub static ref APP_CONFIG: AppConfig = get_app_config();
-}
+impl AppConfig {
+    pub fn new() -> AppConfig {
+        let conf_str: String = fs::read_to_string("config/config.toml").unwrap_or_else(|_| {
+            error!("Can not read config file");
+            process::exit(1)
+        });
 
-fn get_app_config() -> AppConfig {
-    let conf_str: String = fs::read_to_string("config/config.toml")
-        .map_err(|_| error!("Can not read config file"))
-        .unwrap();
-    let app_config_file: AppConfigFile = toml::from_str(&conf_str)
-        .map_err(|_| error!("Can not parse config file"))
-        .unwrap();
+        let app_config_file: AppConfigFile = toml::from_str(&conf_str).unwrap_or_else(|_| {
+            error!("Can not parse config file");
+            process::exit(1)
+        });
 
-    let level: Level = match app_config_file.log_level.as_str() {
-        "Error" => Level::Error,
-        "Warn" => Level::Warn,
-        "Info" => Level::Info,
-        "Debug" => Level::Debug,
-        "Trace" => Level::Trace,
-        _ => Level::Info,
-    };
+        let level: Level = match app_config_file.log_level.as_str() {
+            "Error" => Level::Error,
+            "Warn" => Level::Warn,
+            "Info" => Level::Info,
+            "Debug" => Level::Debug,
+            "Trace" => Level::Trace,
+            _ => Level::Info,
+        };
 
-    let app_config: AppConfig = AppConfig {
-        iteration: app_config_file.iteration,
-        download_urls: app_config_file.download_urls,
-        log_level: level,
-    };
+        let app_config: AppConfig = AppConfig {
+            iteration: app_config_file.iteration,
+            download_urls: app_config_file.download_urls,
+            log_level: level,
+        };
 
-    app_config
+        app_config
+    }
 }

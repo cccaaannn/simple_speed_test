@@ -1,9 +1,9 @@
+use owo_colors::OwoColorize;
 use reqwest::blocking::get;
 use std::io::{stdout, Write};
 use std::time::{Duration, Instant};
-use owo_colors::OwoColorize;
 
-use crate::config_utils;
+use crate::config_utils::AppConfig;
 
 struct PerSeconds {
     bps: f64,
@@ -41,8 +41,7 @@ fn download_content(download_url: String) -> PerSeconds {
     return calculate_per_seconds(content_size_bits, duration.as_secs_f64());
 }
 
-pub fn start() {
-    let app_config = &config_utils::APP_CONFIG;
+pub fn start(app_config: &AppConfig) {
 
     let mut total_bps: f64 = 0.0;
 
