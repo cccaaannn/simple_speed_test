@@ -65,3 +65,36 @@ pub fn start(app_config: &AppConfig) {
     println!("Kbps: {:.*}", 3, per_seconds.kbps.green());
     println!("Mbps: {:.*}", 3, per_seconds.mbps.green());
 }
+
+
+#[cfg(test)]
+mod tests  {
+    use super::*;
+    use mockito;
+
+    #[test]
+    #[should_panic(expected = "Can not fetch file")]
+    fn should_panic_on_download_error() {
+        download_content("".to_owned());
+    }
+
+    #[test]
+    fn should_calculate_per_seconds_from_download() {
+        let mut server = mockito::Server::new();
+
+        let url = server.url();
+
+        // Create a mock
+        let _mock = server
+            .mock("GET", "/")
+            .with_status(200)
+            .with_body("aaaa")
+            .create();
+
+        let per_seconds: PerSeconds = download_content(url.to_owned());
+
+        assert!(per_seconds.bps > 0 as f64);
+        assert!(per_seconds.kbps > 0 as f64);
+        assert!(per_seconds.mbps > 0 as f64);
+    }
+}
