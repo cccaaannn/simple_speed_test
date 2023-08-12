@@ -1,7 +1,6 @@
-use log::{error, Level};
+use log::Level;
 use serde::Deserialize;
 use std::fs;
-use std::process;
 
 #[derive(Deserialize)]
 struct AppConfigFile {
@@ -18,16 +17,12 @@ pub struct AppConfig {
 }
 
 impl AppConfig {
-    pub fn new() -> AppConfig {
-        let conf_str: String = fs::read_to_string("config/config.toml").unwrap_or_else(|_| {
-            error!("Can not read config file");
-            process::exit(1)
-        });
+    pub fn new(file_path: &str) -> AppConfig {
+        let conf_str: String =
+            fs::read_to_string(file_path.to_string()).expect("Can not read config file");
 
-        let app_config_file: AppConfigFile = toml::from_str(&conf_str).unwrap_or_else(|_| {
-            error!("Can not parse config file");
-            process::exit(1)
-        });
+        let app_config_file: AppConfigFile =
+            toml::from_str(&conf_str).expect("Can not parse config file");
 
         let level: Level = match app_config_file.log_level.as_str() {
             "Error" => Level::Error,
@@ -45,5 +40,26 @@ impl AppConfig {
         };
 
         app_config
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic(expected = "Can not read config file")]
+    fn should_fail_to_read_config_file() {
+        const CONFIG_FILE_PATH: &str = "";
+        AppConfig::new(CONFIG_FILE_PATH);
+    }
+
+    #[test]
+    fn should_read_config_file() {
+        const CONFIG_FILE_PATH: &str = "config/config.toml";
+        let app_config: AppConfig = AppConfig::new(CONFIG_FILE_PATH);
+
+        assert_ne!(app_config.iteration, 0);
+        assert_ne!(app_config.download_urls.len(), 0);
     }
 }
