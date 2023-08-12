@@ -5,9 +5,10 @@ use crate::config_utils::AppConfig;
 mod config_utils;
 mod speed_test;
 
-fn main() {
+pub fn main() {
 
-    let app_config: AppConfig = AppConfig::new();
+    const CONFIG_FILE_PATH: &str = "config/config.toml";
+    let app_config: AppConfig = AppConfig::new(CONFIG_FILE_PATH);
 
     // Init logger
     simple_logger::init_with_level(app_config.log_level).unwrap();
