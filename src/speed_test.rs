@@ -42,7 +42,6 @@ fn download_content(download_url: String) -> PerSeconds {
 }
 
 pub fn start(app_config: &AppConfig) {
-
     let mut total_bps: f64 = 0.0;
 
     for iteration in 0..app_config.iteration {
@@ -66,9 +65,8 @@ pub fn start(app_config: &AppConfig) {
     println!("Mbps: {:.*}", 3, per_seconds.mbps.green());
 }
 
-
 #[cfg(test)]
-mod tests  {
+mod tests {
     use super::*;
     use mockito;
 
@@ -88,13 +86,60 @@ mod tests  {
         let _mock = server
             .mock("GET", "/")
             .with_status(200)
-            .with_body("aaaa")
+            .with_body("test")
+            .expect(1)
             .create();
 
         let per_seconds: PerSeconds = download_content(url.to_owned());
 
+        _mock.assert();
         assert!(per_seconds.bps > 0 as f64);
         assert!(per_seconds.kbps > 0 as f64);
         assert!(per_seconds.mbps > 0 as f64);
+    }
+
+    #[test]
+    fn should_calculate_per_seconds() {
+        let per_seconds: PerSeconds = calculate_per_seconds(1_048_576.0, 1.0);
+        assert_eq!(1_048_576.0, per_seconds.bps);
+        assert_eq!(1024.0, per_seconds.kbps);
+        assert_eq!(1.0, per_seconds.mbps);
+    }
+
+    #[test]
+    #[should_panic(expected = "Can not fetch file")]
+    fn should_fail_to_download() {
+        let wrong_download_url: &str = "test";
+        let app_config: AppConfig = AppConfig {
+            iteration: 1,
+            download_urls: vec![wrong_download_url.to_string()],
+            log_level: log::Level::Info,
+        };
+        start(&app_config);
+    }
+
+    #[test]
+    fn should_perform_download_and_calculate_per_seconds() {
+        let mut server = mockito::Server::new();
+
+        let url = server.url();
+
+        // Create a mock
+        let _mock = server
+            .mock("GET", "/")
+            .with_status(200)
+            .with_body("test")
+            .expect(2)
+            .create();
+
+        let app_config: AppConfig = AppConfig {
+            iteration: 2,
+            download_urls: vec![url],
+            log_level: log::Level::Info,
+        };
+
+        start(&app_config);
+
+        _mock.assert();
     }
 }
