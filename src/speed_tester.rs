@@ -41,7 +41,7 @@ fn download_content(download_url: String) -> PerSeconds {
     return calculate_per_seconds(content_size_bits, duration.as_secs_f64());
 }
 
-pub fn start(app_config: &AppConfig) {
+pub fn start_test(app_config: &AppConfig) {
     let mut total_bps: f64 = 0.0;
 
     for iteration in 0..app_config.iteration {
@@ -115,7 +115,7 @@ mod tests {
             download_urls: vec![wrong_download_url.to_string()],
             log_level: log::Level::Info,
         };
-        start(&app_config);
+        start_test(&app_config);
     }
 
     #[test]
@@ -138,7 +138,7 @@ mod tests {
             log_level: log::Level::Info,
         };
 
-        start(&app_config);
+        start_test(&app_config);
 
         _mock.assert();
     }
