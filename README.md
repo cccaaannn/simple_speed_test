@@ -9,4 +9,7 @@ Simple download speed test.
 Downloads files to calculate download speed, it is not too accurate.
 
 ## Run
-1. Run `cargo run src\main.rs`
+```sh
+cargo run
+```
+
