@@ -1,0 +1,9 @@
+[report]
+exclude-files = ["src/main.rs", "src/lib.rs", "tests/*"]
+out = ["Html", "Lcov"]
+output-dir = "coverage"
+count = true
+# coveralls = ""
+
+[run-types]
+all-targets = true
