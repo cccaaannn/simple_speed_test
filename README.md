@@ -2,7 +2,7 @@
 
 Simple download speed test.
 
-![GitHub top language](https://img.shields.io/github/languages/top/cccaaannn/simple_speed_test?color=orange) ![GitHub repo size](https://img.shields.io/github/repo-size/cccaaannn/simple_speed_test?color=purple) [![GitHub](https://img.shields.io/github/license/cccaaannn/simple_speed_test?color=blue)](https://github.com/cccaaannn/simple_speed_test/blob/master/LICENSE) x
+![GitHub top language](https://img.shields.io/github/languages/top/cccaaannn/simple_speed_test?color=orange) ![GitHub repo size](https://img.shields.io/github/repo-size/cccaaannn/simple_speed_test?color=purple) [![GitHub](https://img.shields.io/github/license/cccaaannn/simple_speed_test?color=blue)](https://github.com/cccaaannn/simple_speed_test/blob/master/LICENSE) [![Coverage Status](https://coveralls.io/repos/github/cccaaannn/simple_speed_test/badge.svg?branch=master)](https://coveralls.io/github/cccaaannn/simple_speed_test?branch=master)
 
 ---
 
