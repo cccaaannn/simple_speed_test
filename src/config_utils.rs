@@ -62,4 +62,14 @@ mod tests {
         assert_ne!(app_config.iteration, 0);
         assert_ne!(app_config.download_urls.len(), 0);
     }
+
+    #[test]
+    fn should_test_empty_log_level() {
+        const CONFIG_FILE_PATH: &str = "tests/resources/config/log_levels/_config.toml";
+        let app_config: AppConfig = AppConfig::new(CONFIG_FILE_PATH);
+
+        assert_eq!(app_config.iteration, 1);
+        assert_eq!(app_config.download_urls.len(), 0);
+        assert_eq!(app_config.log_level, Level::Info);
+    }
 }
